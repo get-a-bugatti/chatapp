@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://chatapp-nine-sepia.vercel.app/login",
+      "https://chatapp-nine-sepia.vercel.app",
     ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,

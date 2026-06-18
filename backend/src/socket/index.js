@@ -9,7 +9,10 @@ import { registerMessageHistoryEvents } from "./handleMessageHistory.js";
 export const initializeSocket = (httpServer) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: [
+        "http://localhost:5173",
+        "https://chatapp-nine-sepia.vercel.app",
+      ],
       methods: ["GET", "POST"],
       credentials: true,
     },
