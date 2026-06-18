@@ -112,6 +112,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
 
   const userObj = user.toObject();
@@ -147,6 +148,7 @@ const logoutUser = asyncHandler(async (req, res, next) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
 
   return res
@@ -179,9 +181,10 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Refresh Token is expired or used.");
   }
 
-  const options = {
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
 
   const { refreshToken: newRefreshToken, accessToken: newAccessToken } =
@@ -189,8 +192,8 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .cookie("accessToken", newAccessToken, options)
-    .cookie("refreshToken", newRefreshToken, options)
+    .cookie("accessToken", newAccessToken, cookieOptions)
+    .cookie("refreshToken", newRefreshToken, cookieOptions)
     .json(
       new ApiResponse(200, "Tokens renewed successfully.", {
         accessToken: newAccessToken,
@@ -230,15 +233,15 @@ const changeUserPassword = asyncHandler(async (req, res, next) => {
     throw new ApiError(404, "User not found.");
   }
 
-  const isOldPasswordValid = await user.isPasswordCorrect(trimmedOldPass);
+  const isOldPasswordValid = await targetUser.isPasswordCorrect(trimmedOldPass);
 
   if (!isOldPasswordValid) {
     throw new ApiError(401, "Invalid User password.");
   }
 
   targetUser.password = trimmedNewPass;
-  targetUser.save({
-    validationBeforeSave: false,
+  await targetUser.save({
+    validateBeforeSave: false,
   });
 
   return res

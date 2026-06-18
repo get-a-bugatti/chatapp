@@ -36,13 +36,17 @@ export const registerMessageHistoryEvents = (socket) => {
     }
   });
 
-  socket.on("get_private_messages", async ({ cursor }, callback) => {
+  socket.on("get_private_messages", async ({ cursor, targetUserId }, callback) => {
     try {
+      if (!targetUserId) {
+        throw new Error("Target user ID is required.");
+      }
+
       let query = {
         mode: "private",
         $or: [
-          { from: socket.user._id },
-          { to: socket.user._id }
+          { from: socket.user._id, to: targetUserId },
+          { from: targetUserId, to: socket.user._id }
         ]
       };
 

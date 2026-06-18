@@ -26,7 +26,9 @@ export const initializeSocket = (httpServer) => {
       username: socket.user.username,
     });
 
-    socket.join(socket.user._id);
+    const userId = socket.user._id.toString();
+
+    socket.join(userId);
 
     registerGlobalChatEvents(io, socket);
     registerPrivateChatEvents(io, socket);

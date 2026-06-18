@@ -15,22 +15,21 @@ export default function Users() {
     async function handleSearch() {
 
         try {
-            if (!search.trim() || typeof search !== "string") {
-                setIsSearchActive(false);
+            if (!searchInput.trim() || typeof searchInput !== "string") {
                 setSearchError("Please enter a valid search query.");
                 return;
             }
     
-            const response = await api.post("/api/v1/users/search", { search });
+            const response = await api.post("/api/v1/users/search", { username: searchInput });
             if (!response.data.success) {
                 setSearchError(response.data.message);
                 return;
             }
             
             setUsers(response.data.data);
-            // setSearch("")
         } catch (error) {
-
+            const message = error.response?.data?.message || error.message || "An unexpected error occurred.";
+            setSearchError(message);
         }
     }
 

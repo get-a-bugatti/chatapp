@@ -106,8 +106,7 @@ export default function PrivateChat() {
       socket.emit(
           "get_private_messages",
           {
-            user1: userData._id,
-            user2: userId // fill with target user later.
+            targetUserId: userId
           },
           (response) => {
               if (!response.success) return;
@@ -146,6 +145,7 @@ export default function PrivateChat() {
       socket.emit(
         "get_private_messages", {
           cursor: oldestMessage.createdAt,
+          targetUserId: userId
         },
     
         (response) => {
@@ -215,7 +215,7 @@ export default function PrivateChat() {
                 return (
                   <MessageBox
                     isMe={isMe}
-                    key={msg._id}
+                    key={msg.id || msg._id}
                     mode={msg.mode}
                     content={msg.content}
                   />

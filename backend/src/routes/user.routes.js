@@ -32,7 +32,7 @@ router.route("/signup").post(
 );
 router.route("/login").post(loginUser);
 router.route("/logout").get(requireAuth, logoutUser);
-router.route("/refresh-tokens").get(requireAuth, refreshAccessToken);
+router.route("/refresh-tokens").get(refreshAccessToken);
 router.route("/me").get(requireAuth, getCurrentUser);
 router.route("/password").patch(requireAuth, changeUserPassword);
 router.route("/all").get(requireAuth, getAllUsers);
