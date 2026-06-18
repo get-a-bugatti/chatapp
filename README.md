@@ -1,7 +1,5 @@
 # chatapp
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/get-a-bugatti/chatapp)
-
-This is a full-stack, real-time chat application built with Node.js, Express, React, and MongoDB. It features both global and private (one-on-one) messaging capabilities powered by Socket.IO.
+ a full-stack, real-time chat application built with Node.js, Express, React, and MongoDB. It features both global and private (one-on-one) messaging capabilities powered by Socket.IO.
 
 ## Features
 
