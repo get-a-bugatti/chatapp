@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import {MessageBox} from "../components/index.js";
 import { socket } from "../utils/socket.js"
 import {useSelector} from "react-redux";
-import axios from "axios";
 
 export default function GlobalChat() {
 

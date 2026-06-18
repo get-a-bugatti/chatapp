@@ -3,7 +3,7 @@ import {MessageBox} from "../components/index.js";
 import { socket } from "../utils/socket.js"
 import {useSelector} from "react-redux";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios.js";
 
 export default function PrivateChat() {
 
@@ -30,7 +30,7 @@ export default function PrivateChat() {
             throw new Error("No userId provided.");
           }
 
-          const response = await axios.get(`/api/v1/users/${targetUserId}`);
+          const response = await api.get(`/api/v1/users/${targetUserId}`);
 
           console.log("Error message :: PrivateChat() :", response.data.message);
           if (!response.data.success) {

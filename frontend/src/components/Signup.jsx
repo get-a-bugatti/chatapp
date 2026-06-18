@@ -1,7 +1,7 @@
 // Signup.jsx
 import { useState } from "react";
 import Input from "./Input";
-import axios from "axios";
+import api from "../api/axios.js";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ export default function Signup() {
 
 
     try {
-      const response = await axios.post("/api/v1/users/signup", dataToSend);
+      const response = await api.post("/api/v1/users/signup", dataToSend);
 
       if (!response.data.success) {
         throw new Error(response.data.message);

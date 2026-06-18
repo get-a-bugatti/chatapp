@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api/axios.js";
 import { UserBox } from "../components";
 import { useState, useEffect } from "react";
 
@@ -21,7 +21,7 @@ export default function Users() {
                 return;
             }
     
-            const response = await axios.post("/api/v1/users/search", { search });
+            const response = await api.post("/api/v1/users/search", { search });
             if (!response.data.success) {
                 setSearchError(response.data.message);
                 return;
@@ -38,7 +38,7 @@ export default function Users() {
         
         async function fetchUsers() {           
             try {
-                const response = await axios.get("/api/v1/users/others");
+                const response = await api.get("/api/v1/users/others");
     
                 if (!response.data.success) {
                     throw new Error(response.data.message);

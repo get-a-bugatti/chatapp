@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import api from "../api/axios.js";
 import { logout as logoutUser } from "../store/authSlice.js";
 import { socket } from "../utils/socket.js";
 
@@ -17,7 +17,7 @@ export default function Navbar() {
     dispatch(logoutUser());
     socket.disconnect();
 
-    const response = await axios.get("/api/v1/users/logout");
+    const response = await api.get("/api/v1/users/logout");
     navigate("/login");
   }
 

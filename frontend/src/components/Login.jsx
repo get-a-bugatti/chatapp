@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "./Input";
-import axios from "axios";
+import api from "../api/axios.js";
 import { login as loginUser, logout as logoutUser } from "../store/authSlice.js"
 import { socket } from "../utils/socket.js";
 
@@ -31,7 +31,7 @@ export default function Login() {
     e.preventDefault();
   
     try {
-      const response = await axios.post(
+      const response = await api.post(
         "/api/v1/users/login",
         formData
       );

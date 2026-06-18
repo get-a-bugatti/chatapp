@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import {useState, useEffect} from "react";
 import {login as loginUser, logout as logoutUser} from "./store/authSlice.js";
 import {useDispatch} from "react-redux";
-import axios from "axios";
+import api from "./api/axios.js";
 import { socket } from "./utils/socket.js";
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-  axios.get("/api/v1/users/me")
+  api.get("/api/v1/users/me")
     .then(response => {
       if (response.data?.data) {
         dispatch(loginUser(response.data.data));

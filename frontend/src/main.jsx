@@ -7,9 +7,6 @@ import UserBox from './components/UserBox.jsx'
 import { Provider } from 'react-redux'
 import{ GlobalChat, Login, PrivateChat, Signup, Users } from "./pages/index.js"
 import store from './store/store.js'
-import axios from 'axios'
-
-axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter([
   {
