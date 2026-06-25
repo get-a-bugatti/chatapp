@@ -148,11 +148,11 @@ export default function GlobalChat() {
 
     return (
         <div className="h-screen bg-gray-100 flex justify-center items-center">
-          <div className="w-full max-w-md h-[700px] bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
+          <div className="w-full h-full bg-white shadow-xl flex flex-col overflow-hidden">
     
             {/* Header */}
             <div className="bg-black text-white p-4 font-semibold text-lg">
-              Chat App
+              Global Server
             </div>
     
             {/* Messages */}
