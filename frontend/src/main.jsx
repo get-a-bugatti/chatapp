@@ -1,11 +1,19 @@
+import {lazy, Suspense} from "react";
 import { createRoot } from 'react-dom/client'
 import './index.css'
+
 import App from './App.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import Protected from './components/Protected.jsx'
 import UserBox from './components/UserBox.jsx'
+import LoadingScreen from './components/LoadingScreen.jsx';
+
+import{ Login, Signup } from "./pages/index.js"
+const Users = lazy(() => import("./pages/Users.jsx"));
+const GlobalChat = lazy(() => import("./pages/GlobalChat.jsx"));
+const PrivateChat = lazy(() => import("./pages/PrivateChat.jsx"));
+
 import { Provider } from 'react-redux'
-import{ GlobalChat, Login, PrivateChat, Signup, Users } from "./pages/index.js"
 import store from './store/store.js'
 
 const router = createBrowserRouter([
@@ -73,6 +81,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
     <Provider store={store}>
+      <Suspense fallback={LoadingScreen}>
         <RouterProvider router={router} />
+      </Suspense>
     </Provider>
 )
