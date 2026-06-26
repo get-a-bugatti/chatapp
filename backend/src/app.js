@@ -13,6 +13,8 @@ app.use(
       "http://localhost:5173",
       "https://chatapp-nine-sepia.vercel.app",
       "https://chatapp-git-feature-responsive-39b7da-redoxs-projects-b1ca2819.vercel.app",
+      "https://chatapp-1pd7hkdaz-redoxs-projects-b1ca2819.vercel.app/",
+      "https://chatapp-git-feature-responsive-39b7da-redoxs-projects-b1ca2819.vercel.app",
     ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
