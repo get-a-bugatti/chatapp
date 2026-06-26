@@ -7,12 +7,22 @@ import {
 import { registerMessageHistoryEvents } from "./handleMessageHistory.js";
 
 export const initializeSocket = (httpServer) => {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://chatapp-nine-sepia.vercel.app",
+  ];
+
   const io = new Server(httpServer, {
     cors: {
-      origin: [
-        "http://localhost:5173",
-        "https://chatapp-nine-sepia.vercel.app",
-      ],
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+          return callback(null, true);
+        }
+
+        callback(new Error("Not allowed by CORS"));
+      },
       methods: ["GET", "POST"],
       credentials: true,
     },
