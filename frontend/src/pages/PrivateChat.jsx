@@ -192,11 +192,11 @@ export default function PrivateChat() {
 
     return (
         <div className="h-screen bg-gray-100 flex justify-center items-center">
-          <div className="w-full max-w-md h-[700px] bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
+          <div className="w-full h-full bg-white shadow-xl flex flex-col overflow-hidden">
     
             {/* Header */}
             <div className="bg-black text-white p-4 font-semibold text-lg">
-              Chat App
+              Private Chat
             </div>
     
             {/* Messages */}
@@ -215,7 +215,7 @@ export default function PrivateChat() {
                 return (
                   <MessageBox
                     isMe={isMe}
-                    key={msg.id || msg._id}
+                    key={msg._id}
                     mode={msg.mode}
                     content={msg.content}
                   />
@@ -242,6 +242,7 @@ export default function PrivateChat() {
                   outline-none
                   focus:ring-2
                   focus:ring-black
+                  text-black
                 "
               />
     
