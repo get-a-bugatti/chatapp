@@ -7,13 +7,16 @@ import userRouter from "./routes/user.routes.js";
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://chatapp-nine-sepia.vercel.app",
+  "https://chatapp-git-feature-responsive-39b7da-redoxs-projects-b1ca2819.vercel.app",
+  "http://192.168.18.58:5173",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://chatapp-nine-sepia.vercel.app",
-      "https://chatapp-git-feature-responsive-39b7da-redoxs-projects-b1ca2819.vercel.app",
-    ],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
