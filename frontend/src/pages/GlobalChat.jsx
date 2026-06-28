@@ -47,6 +47,7 @@ export default function GlobalChat() {
     }
 
     function handleReceiveGlobalMessage(incomingMsg) {
+
         setMessages((prev) => [
             ...prev,
             {
@@ -148,7 +149,7 @@ export default function GlobalChat() {
 
     return (
         <div className="h-screen bg-gray-100 flex justify-center items-center">
-          <div className="w-full h-full bg-white shadow-xl flex flex-col overflow-hidden">
+          <div className="w-full h-full shadow-xl flex flex-col overflow-hidden">
     
             {/* Header */}
             <div className="bg-black text-white p-4 font-semibold text-lg">
@@ -159,19 +160,21 @@ export default function GlobalChat() {
             <div
               ref={chatRef}
               onScroll={handleScroll}
-              className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"
+              className="flex-1 overflow-y-auto p-4 space-y-3"
             >
-              {loadingOlder && (
+              {/* {loadingOlder && (
                 <div className="text-center text-sm text-gray-500">Loading...</div>
-              )}
+              )} */}
 
               {messages.map((msg) => {
                 const isMe = String(userData._id) === String(msg.from);
 
+                console.log("User isMe Data :",isMe, userData, msg);
+
                 return (
                   <MessageBox
                     isMe={isMe}
-                    key={msg.id}
+                    key={msg._id}
                     mode={msg.mode}
                     content={msg.content}
                   />
@@ -198,6 +201,7 @@ export default function GlobalChat() {
                   outline-none
                   focus:ring-2
                   focus:ring-black
+                  text-black
                 "
               />
     

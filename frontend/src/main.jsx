@@ -81,8 +81,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
     <Provider store={store}>
-      <Suspense fallback={LoadingScreen}>
+      {/* <Suspense fallback={LoadingScreen}> */}
         <RouterProvider router={router} />
-      </Suspense>
+      {/* </Suspense> */}
     </Provider>
 )
