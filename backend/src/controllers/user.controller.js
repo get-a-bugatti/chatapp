@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import mongoose from "mongoose";
 import { objectId } from "../utils/objectId.js";
+import { sendEmail } from "../utils/nodemailer.js";
 
 const generateTokens = async (userId) => {
   try {
@@ -334,6 +335,106 @@ const getUserByUsername = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, "Users fetched successfully.", users));
 });
 
+const forgotPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  const trimmedEmail = email.trim();
+
+  const user = await User.findOne({
+    email: trimmedEmail,
+  });
+
+  if (!user) {
+    throw new ApiError(404, "Couldn't find user.");
+  }
+
+  const resetToken = crypto.randomBytes(32).toString("hex").substring(0, 6);
+
+  await user.setOtp(resetToken);
+
+  await sendEmail(user.email, resetToken);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "Password Reset instructions sent successfully. Check Your Email.",
+        {}
+      )
+    );
+});
+
+const verifyOtp = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+
+  const trimmedEmail = email.trim();
+
+  if (!trimmedEmail) {
+    throw new ApiError(400, "Missing email.");
+  }
+
+  const user = await User.findOne({
+    email: trimmedEmail,
+  });
+
+  if (!user) {
+    throw new ApiError(404, "Couldn't find user.");
+  }
+
+  if (!(await user.isOtpValid(otp))) {
+    throw new ApiError(400, "Invalid or expired OTP.");
+  }
+
+  // OTP is no longer needed
+  await user.resetOtp();
+
+  // Generate a cryptographically secure reset token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Store only the hash
+  await user.setPasswordResetToken(resetToken);
+
+  return res.status(200).json(
+    new ApiResponse(200, "OTP verified successfully.", {
+      resetToken,
+    })
+  );
+});
+
+const setNewPassword = asyncHandler(async (req, res, next) => {
+  const { email, resetToken, password, confirmPassword } = req.body;
+
+  if (!resetToken || typeof resetToken !== "string") {
+    throw new ApiError(400, "Missing or invalid reset token.");
+  }
+
+  const trimmedPassword = password.trim();
+  const trimmedConfirmPassword = confirmPassword.trim();
+
+  if (trimmedPassword !== trimmedConfirmPassword) {
+    throw new ApiError(400, "Passwords do not match.");
+  }
+
+  const user = await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new ApiError(404, "Couldn't find user.");
+  }
+
+  if (!(await user.isResetTokenValid(resetToken))) {
+    throw new ApiError(400, "Invalid or expired reset token.");
+  }
+
+  user.password = trimmedPassword;
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Password changed successfully.", {}));
+});
+
 export {
   registerUser,
   loginUser,
@@ -345,4 +446,7 @@ export {
   getAllOtherUsers,
   getUserById,
   getUserByUsername,
+  forgotPassword,
+  verifyOtp,
+  setNewPassword,
 };

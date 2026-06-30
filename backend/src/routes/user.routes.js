@@ -11,6 +11,9 @@ import {
   getAllOtherUsers,
   getUserById,
   getUserByUsername,
+  forgotPassword,
+  verifyOtp,
+  setNewPassword,
 } from "../controllers/user.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
@@ -31,6 +34,9 @@ router.route("/signup").post(
   registerUser
 );
 router.route("/login").post(loginUser);
+router.route("/forgot-password").post(forgotPassword);
+router.route("/verify-otp").post(verifyOtp);
+router.route("/set-new-password").post(setNewPassword);
 router.route("/logout").get(requireAuth, logoutUser);
 router.route("/refresh-tokens").get(refreshAccessToken);
 router.route("/me").get(requireAuth, getCurrentUser);
