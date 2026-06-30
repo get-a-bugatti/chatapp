@@ -257,7 +257,9 @@ const getCurrentUser = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "Unauthorized Access.");
   }
 
-  const user = await User.findById(userId).select("-password -refreshToken");
+  const user = await User.findById(userId).select(
+    "-password -refreshToken -otp -passwordReset"
+  );
 
   if (!user) {
     throw new ApiError(404, "Couldn't find user.");
@@ -269,7 +271,9 @@ const getCurrentUser = asyncHandler(async (req, res, next) => {
 });
 
 const getAllUsers = asyncHandler(async (req, res, next) => {
-  const users = await User.find().select("-password -refreshToken");
+  const users = await User.find().select(
+    "-password -refreshToken -otp -passwordReset"
+  );
 
   return res
     .status(200)
@@ -285,7 +289,7 @@ const getAllOtherUsers = asyncHandler(async (req, res, next) => {
 
   const users = await User.find({
     _id: { $ne: objectId(userId) },
-  }).select("-password -refreshToken");
+  }).select("-password -refreshToken -otp -passwordReset");
 
   return res
     .status(200)
@@ -306,7 +310,9 @@ const getUserById = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const user = await User.findById(userId).select("-password -refreshToken");
+  const user = await User.findById(userId).select(
+    "-password -refreshToken -otp -passwordReset"
+  );
 
   if (!user) {
     throw new ApiError(404, "Couldn't find user.");
@@ -324,7 +330,7 @@ const getUserByUsername = asyncHandler(async (req, res, next) => {
 
   const users = await User.find({
     username,
-  }).select("-password -refreshToken");
+  }).select("-password -refreshToken -otp -passwordReset");
 
   if (!users) {
     throw new ApiError(404, "Couldn't find user.");
