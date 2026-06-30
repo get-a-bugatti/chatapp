@@ -343,11 +343,20 @@ const getUserByUsername = asyncHandler(async (req, res, next) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
-  const { email } = req.body;
-  const trimmedEmail = email.trim();
+  const { login } = req.body;
+
+  if (!login) {
+    throw new ApiError(400, "Missing Login.");
+  }
+
+  const trimmedLogin = login.trim();
+
+  if (!trimmedLogin) {
+    throw new ApiError(400, "Missing Login.");
+  }
 
   const user = await User.findOne({
-    email: trimmedEmail,
+    $or: [{ email: trimmedLogin }, { username: trimmedLogin }],
   });
 
   if (!user) {
@@ -372,23 +381,36 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 });
 
 const verifyOtp = asyncHandler(async (req, res) => {
-  const { otp } = req.body;
+  const { login, otp } = req.body;
 
+  if (!login) {
+    throw new ApiError(400, "Missing Login.");
+  }
+
+  if (!otp) {
+    throw new ApiError(400, "Missing OTP.");
+  }
+
+  const trimmedLogin = login.trim();
   const trimmedOtp = otp.trim();
+
+  if (!trimmedLogin) {
+    throw new ApiError(400, "Missing Login.");
+  }
 
   if (!trimmedOtp) {
     throw new ApiError(400, "Missing OTP.");
   }
 
   const user = await User.findOne({
-    "otp.pinHash": trimmedOtp,
+    $or: [{ email: trimmedLogin }, { username: trimmedLogin }],
   });
 
   if (!user) {
-    throw new ApiError(404, "Invalid or expired OTP.");
+    throw new ApiError(404, "Couldn't find user.");
   }
 
-  if (!(await user.isOtpValid(otp))) {
+  if (!(await user.isOtpValid(trimmedOtp))) {
     throw new ApiError(400, "Invalid or expired OTP.");
   }
 
@@ -409,10 +431,20 @@ const verifyOtp = asyncHandler(async (req, res) => {
 });
 
 const setNewPassword = asyncHandler(async (req, res, next) => {
-  const { resetToken, password, confirmPassword } = req.body;
+  const { login, resetToken, password, confirmPassword } = req.body;
 
   if (!resetToken || typeof resetToken !== "string") {
     throw new ApiError(400, "Missing or invalid reset token.");
+  }
+
+  if (!login) {
+    throw new ApiError(400, "Missing Login.");
+  }
+
+  const trimmedLogin = login.trim();
+
+  if (!trimmedLogin) {
+    throw new ApiError(400, "Missing Login.");
   }
 
   const trimmedPassword = password.trim();
@@ -423,7 +455,7 @@ const setNewPassword = asyncHandler(async (req, res, next) => {
   }
 
   const user = await User.findOne({
-    "passwordReset.tokenHash": resetToken,
+    $or: [{ email: trimmedLogin }, { username: trimmedLogin }],
   });
 
   if (!user) {

@@ -8,11 +8,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = async (email, resetToken) => {
+export const sendEmail = async (targetEmail, resetToken) => {
   const mailOptions = {
     from: `"Your Chat App Security" <>`,
     to: targetEmail,
-    subject: "Your Password Reset OTP",
+    subject: "Chat App - Your Password Reset OTP",
     text: `Your password reset code is ${resetToken}. It will expire in 10 minutes.`,
     html: `
           <div style="font-family: sans-serif; padding: 20px; text-align: center;">

@@ -76,11 +76,15 @@ userSchema.pre("save", async function () {
 userSchema.pre("save", async function () {
   if (!this.isModified("otp.pinHash")) return;
 
+  if (!this.otp.pinHash) return;
+
   this.otp.pinHash = await bcrypt.hash(this.otp.pinHash, 10);
 });
 
 userSchema.pre("save", async function () {
   if (!this.isModified("passwordReset.tokenHash")) return;
+
+  if (!this.passwordReset.tokenHash) return;
 
   this.passwordReset.tokenHash = await bcrypt.hash(
     this.passwordReset.tokenHash,
