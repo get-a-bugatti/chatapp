@@ -7,6 +7,7 @@ import { User } from "../models/user.model.js";
 import mongoose from "mongoose";
 import { objectId } from "../utils/objectId.js";
 import { sendEmail } from "../utils/nodemailer.js";
+import crypto from "crypto";
 
 const generateTokens = async (userId) => {
   try {
@@ -371,20 +372,20 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 });
 
 const verifyOtp = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body;
+  const { otp } = req.body;
 
-  const trimmedEmail = email.trim();
+  const trimmedOtp = otp.trim();
 
-  if (!trimmedEmail) {
-    throw new ApiError(400, "Missing email.");
+  if (!trimmedOtp) {
+    throw new ApiError(400, "Missing OTP.");
   }
 
   const user = await User.findOne({
-    email: trimmedEmail,
+    "otp.pinHash": trimmedOtp,
   });
 
   if (!user) {
-    throw new ApiError(404, "Couldn't find user.");
+    throw new ApiError(404, "Invalid or expired OTP.");
   }
 
   if (!(await user.isOtpValid(otp))) {
@@ -408,7 +409,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
 });
 
 const setNewPassword = asyncHandler(async (req, res, next) => {
-  const { email, resetToken, password, confirmPassword } = req.body;
+  const { resetToken, password, confirmPassword } = req.body;
 
   if (!resetToken || typeof resetToken !== "string") {
     throw new ApiError(400, "Missing or invalid reset token.");
@@ -422,7 +423,7 @@ const setNewPassword = asyncHandler(async (req, res, next) => {
   }
 
   const user = await User.findOne({
-    email,
+    "passwordReset.tokenHash": resetToken,
   });
 
   if (!user) {
