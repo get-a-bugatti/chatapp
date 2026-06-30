@@ -6,6 +6,7 @@ import {login as loginUser, logout as logoutUser} from "./store/authSlice.js";
 import {useDispatch} from "react-redux";
 import api from "./api/axios.js";
 import { socket } from "./utils/socket.js";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
 
@@ -40,7 +41,13 @@ export default function App() {
       <Navbar />
 
       <main className="p-6">
-        <Outlet />
+          <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+          }}
+          />
+          <Outlet />
       </main>
     </div>
   );

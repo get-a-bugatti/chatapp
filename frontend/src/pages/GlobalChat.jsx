@@ -69,11 +69,12 @@ export default function GlobalChat() {
     }
 
     function loadInitialMessages() {
-
+      
       socket.emit(
           "get_global_messages",
           {},
           (response) => {
+
               if (!response.success) return;
 
               setMessages(response.messages);
@@ -137,11 +138,18 @@ export default function GlobalChat() {
 
     useEffect(() => {
 
-      loadInitialMessages();
+      if (socket.connected) {
+        loadInitialMessages();
+      } else {
+        socket.once("connect", () => {
+          loadInitialMessages();
+        });
+      }
 
       socket.on("global_message", handleReceiveGlobalMessage);
 
       return () => {
+          socket.off("connect", loadInitialMessages);
           socket.off("global_message", handleReceiveGlobalMessage);
       }
     }, [])

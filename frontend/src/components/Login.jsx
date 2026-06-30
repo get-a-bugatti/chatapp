@@ -105,6 +105,10 @@ export default function Login() {
             Sign Up
           </span>
         </p>
+
+        <p className="text-center cursor-pointer text-sm text-gray-600 font-semibold dark:text-gray-400 mt-4" onClick={() => navigate("/forgot-password")}>
+          Forgot Password ?
+        </p>
       </div>
     </div>
   );
