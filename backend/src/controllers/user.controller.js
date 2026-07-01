@@ -343,6 +343,7 @@ const getUserByUsername = asyncHandler(async (req, res, next) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
+  console.log("Hit : forgotPassword controller");
   const { login } = req.body;
 
   if (!login) {
@@ -354,6 +355,8 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   if (!trimmedLogin) {
     throw new ApiError(400, "Missing Login.");
   }
+
+  console.log("Before finding User");
 
   const user = await User.findOne({
     $or: [{ email: trimmedLogin }, { username: trimmedLogin }],
