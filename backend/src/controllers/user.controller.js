@@ -365,9 +365,13 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   const resetToken = crypto.randomBytes(32).toString("hex").substring(0, 6);
 
+  console.log("Before setOtp");
   await user.setOtp(resetToken);
 
+  console.log("Before sendMail");
   await sendEmail(user.email, resetToken);
+
+  console.log("After sendMail");
 
   return res
     .status(200)
