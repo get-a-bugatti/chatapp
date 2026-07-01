@@ -21,7 +21,7 @@ export const sendEmail = async (targetEmail, resetToken) => {
   try {
     console.log({
       emailUser: process.env.EMAIL_USER,
-      emailPassExists: !!process.env.EMAIL_PASSWORD,
+      emailPassExists: !!process.env.EMAIL_PASS,
     });
 
     const mailOptions = {
