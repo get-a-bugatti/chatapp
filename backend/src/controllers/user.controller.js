@@ -343,7 +343,6 @@ const getUserByUsername = asyncHandler(async (req, res, next) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
-  console.log("Hit : forgotPassword controller");
   const { login } = req.body;
 
   if (!login) {
@@ -356,8 +355,6 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Missing Login.");
   }
 
-  console.log("Before finding User");
-
   const user = await User.findOne({
     $or: [{ email: trimmedLogin }, { username: trimmedLogin }],
   });
@@ -368,13 +365,9 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   const resetToken = crypto.randomBytes(32).toString("hex").substring(0, 6);
 
-  console.log("Before setOtp");
   await user.setOtp(resetToken);
 
-  console.log("Before sendMail");
   await sendEmail(user.email, resetToken);
-
-  console.log("After sendMail");
 
   return res
     .status(200)
