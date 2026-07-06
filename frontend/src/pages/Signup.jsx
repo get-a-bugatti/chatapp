@@ -1,7 +1,7 @@
 // Signup.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Input from "./Input";
+import Input from "./components/Input";
 import api from "../api/axios.js";
 
 export default function Signup() {

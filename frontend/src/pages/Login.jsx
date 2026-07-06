@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Input from "./Input";
+import Input from "./components/Input";
 import api from "../api/axios.js";
 import { login as loginUser, logout as logoutUser } from "../store/authSlice.js";
 import { socket } from "../utils/socket.js";
