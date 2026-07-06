@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || "");
 export const sendEmail = async function (targetEmail, resetToken) {
   try {
     const { data, error } = await resend.emails.send({
-      from: `"Your Chat App Security" <>`,
+      from: `"Your Chat App Security" <${process.env.RESEND_EMAIL_SENDER}>`,
       to: targetEmail,
       subject: "Chat App - Your Password Reset OTP",
       text: `Your password reset code is ${resetToken}. It will expire in 10 minutes.`,
