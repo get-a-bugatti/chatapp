@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {MessageBox} from "../components/index.js";
 import { socket } from "../utils/socket.js"
 import {useSelector} from "react-redux";
@@ -47,7 +47,7 @@ export default function PrivateChat() {
       checkUser();
     }, [targetUserId]);
 
-    function sendMessagePrivate() {
+    const sendMessagePrivate = useCallback(() => {
       if (!message.trim()) return;
 
       socket.emit("private_message", {
@@ -57,7 +57,7 @@ export default function PrivateChat() {
       });
 
       setMessage("");
-    }
+    }, [message, userId]);
 
     const handleKeyDown = (e) => {
 
@@ -67,7 +67,7 @@ export default function PrivateChat() {
       }
     };
 
-    function handleScroll() {
+    const handleScroll = useCallback(() => {
 
       const container = chatRef.current;
   
@@ -77,9 +77,9 @@ export default function PrivateChat() {
       if (container.scrollTop < 50) {
           loadOlderMessages();
       }
-    }
+    }, [loadOlderMessages]); // dont forget to add dependencies 
 
-    function handleReceivePrivateMessage(newMessage) {
+    const handleReceivePrivateMessage = useCallback((newMessage) => {
         setMessages((prev) => [
             ...prev,
             {
@@ -99,9 +99,9 @@ export default function PrivateChat() {
 
           container.scrollTop = container.scrollHeight;
         });
-    }
+    }, []);
 
-    function loadInitialMessages() {
+    const loadInitialMessages = useCallback(() => {
 
       socket.emit(
           "get_private_messages",
@@ -128,10 +128,11 @@ export default function PrivateChat() {
             });
           }
         );
-    }
+    }, [userId]);
 
-    function loadOlderMessages() {
+    const loadOlderMessages = useCallback(() => {
       if (loadingOlder || !hasMore) return;
+      if (!messages.length) return;
     
       setLoadingOlder(true);
     
@@ -174,18 +175,22 @@ export default function PrivateChat() {
         });
         }
       );
-    }
+    }, [loadingOlder, hasMore, messages, userId]);
 
     useEffect(() => {
 
-      loadInitialMessages();
+      if (socket.connected) {
+        loadInitialMessages();
+      } else {
+        socket.once("connect", loadInitialMessages);
+      }
 
       socket.on("private_message", handleReceivePrivateMessage);
 
       return () => {
           socket.off("private_message", handleReceivePrivateMessage);
       }
-    }, [])
+    }, [loadInitialMessages, handleReceivePrivateMessage]);
 
     if (error) return <div className="error text-red-500 font-semibold">Error: {error}</div>;
     if (loading) return <div className="loader text-gray-500 font-semibold">Loading...</div>;

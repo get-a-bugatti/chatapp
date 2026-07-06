@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import mongoose from "mongoose";
 import { objectId } from "../utils/objectId.js";
-import { sendEmail } from "../utils/nodemailer.js";
+import { sendEmail } from "../utils/resend.js";
 import crypto from "crypto";
 
 const generateTokens = async (userId) => {

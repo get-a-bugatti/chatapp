@@ -1,4 +1,5 @@
-export default function  MessageBox({
+import {memo} from "react";
+ function  MessageBox({
     isMe,
     content="",
 }) {
@@ -31,3 +32,5 @@ export default function  MessageBox({
         //     {content}
         // </div>
     }
+
+export default memo(MessageBox);
