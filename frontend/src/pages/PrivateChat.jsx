@@ -59,6 +59,53 @@ export default function PrivateChat() {
       setMessage("");
     }, [message, userId]);
 
+    const loadOlderMessages = useCallback(() => {
+      if (loadingOlder || !hasMore) return;
+      if (!messages.length) return;
+    
+      setLoadingOlder(true);
+    
+      const oldestMessage = messages[0];
+
+      const container = chatRef.current;
+        if (!container) return;
+
+        const previousHeight = container.scrollHeight;
+    
+      socket.emit(
+        "get_private_messages", {
+          cursor: oldestMessage.createdAt,
+          targetUserId: userId
+        },
+    
+        (response) => {
+    
+          setLoadingOlder(false);
+    
+          if (!response.success) return;
+    
+          if (response.messages.length === 0) {
+            setHasMore(false);
+            return;
+          }
+    
+          setMessages(prev => [
+            ...response.messages,
+            ...prev
+          ]);
+
+          // preserve scroll position
+          requestAnimationFrame(() => {
+
+            const newHeight = container.scrollHeight;
+
+            container.scrollTop =
+                newHeight - previousHeight;
+        });
+        }
+      );
+    }, [loadingOlder, hasMore, messages, userId]);
+
     const handleKeyDown = (e) => {
 
       if (e.key === "Enter" && !e.shiftKey) {
@@ -130,52 +177,7 @@ export default function PrivateChat() {
         );
     }, [userId]);
 
-    const loadOlderMessages = useCallback(() => {
-      if (loadingOlder || !hasMore) return;
-      if (!messages.length) return;
-    
-      setLoadingOlder(true);
-    
-      const oldestMessage = messages[0];
 
-      const container = chatRef.current;
-        if (!container) return;
-
-        const previousHeight = container.scrollHeight;
-    
-      socket.emit(
-        "get_private_messages", {
-          cursor: oldestMessage.createdAt,
-          targetUserId: userId
-        },
-    
-        (response) => {
-    
-          setLoadingOlder(false);
-    
-          if (!response.success) return;
-    
-          if (response.messages.length === 0) {
-            setHasMore(false);
-            return;
-          }
-    
-          setMessages(prev => [
-            ...response.messages,
-            ...prev
-          ]);
-
-          // preserve scroll position
-          requestAnimationFrame(() => {
-
-            const newHeight = container.scrollHeight;
-
-            container.scrollTop =
-                newHeight - previousHeight;
-        });
-        }
-      );
-    }, [loadingOlder, hasMore, messages, userId]);
 
     useEffect(() => {
 
