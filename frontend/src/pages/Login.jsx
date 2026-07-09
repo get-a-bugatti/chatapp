@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Input from "../components/Input";
 import api from "../api/axios.js";
 import { login as loginUser, logout as logoutUser } from "../store/authSlice.js";
@@ -16,6 +16,9 @@ export default function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -41,7 +44,9 @@ export default function Login() {
       socket.connect();
 
       alert("Login successful!");
-      navigate("/");
+      navigate(from, {
+        replace: true
+      });
   
     } catch (error) {
       dispatch(logoutUser());

@@ -2,11 +2,11 @@ import {lazy, Suspense} from "react";
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
-import App from './App.jsx'
+import App, {AppLoader} from './App.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import Protected from './components/Protected.jsx'
-import UserBox from './components/UserBox.jsx'
 import LoadingScreen from './components/LoadingScreen.jsx';
+// import UserBox from './components/UserBox.jsx'
 
 import{ Login, Signup } from "./pages/index.js"
 const Users = lazy(() => import("./pages/Users.jsx"));
@@ -37,85 +37,54 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    loader: AppLoader,
     children: [
       {
-        index: true,
-        element: (
-          <Protected authentication={true}>
-            <Users />
-          </Protected>
-        ),
+        element: <Protected authentication={true} />,
+        children: [
+          {
+            index: true,
+            element: <Users />
+          }, 
+          {
+            path: "global",
+           element: <GlobalChat />
+          }, 
+          {
+            path: "private/:userId",
+            element: <PrivateChat />
+          },
+          {
+            path: "users/all",
+            element: <Users />
+          }
+        ]
       },
       {
-        path: "login",
-        element: (
-          <Protected authentication={false}>
-            <Login />
-          </Protected>
-        ),
+        element: <Protected authentication={false} />,
+        children: [
+          {
+            path: "login",
+            element: <Login />
+          },
+          {
+            path: "signup",
+            element: <Signup />
+          },
+          {
+            path: "forgot-password",
+            element: <ForgotPasswordPage />
+          },
+          {
+            path: "verify-otp",
+            element: <VerifyOtpPage />
+          },
+          {
+            path: "set-new-password",
+            element: <SetNewPasswordPage />
+          }
+        ]
       },
-      {
-        path: "signup",
-        element: (
-          <Protected authentication={false}>
-            <Signup />
-          </Protected>
-        ),
-      },
-      {
-        path: "global",
-        element: (
-          <Protected authentication={true}>
-            <GlobalChat />
-          </Protected>
-        ),
-      },
-      {
-        path: "private/:userId",
-        element: (
-          <Protected authentication={true}>
-            <PrivateChat />
-          </Protected>
-        ),
-      },
-      {
-        path: "users/all",
-        element: (
-          <Protected authentication={true}>
-            <Users />
-          </Protected>
-        ),
-      },
-      {
-        path: "forgot-password",
-        element: (
-          <Protected authentication={false}>
-            <ForgotPasswordPage />
-          </Protected>
-        ),
-      },
-      {
-        path: "verify-otp",
-        element: (
-          <Protected authentication={false}>
-            <VerifyOtpPage />
-          </Protected>
-        )
-      },
-      {
-        path: "set-new-password",
-        element: (
-          <Protected authentication={false}>
-            <SetNewPasswordPage />
-          </Protected>
-        )
-      },
-      {
-        path: "test",
-        element: (
-            <UserBox />
-        ),
-      }
     ],
   },
 ]);
