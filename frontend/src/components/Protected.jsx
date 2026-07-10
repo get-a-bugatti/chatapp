@@ -39,9 +39,10 @@ export default function Protected({
 
     const authStatus = useSelector(state => state.auth.status);
     const location = useLocation();
+    const from = location.state?.from?.pathname || "/"; 
 
     if (authentication !== authStatus) {
-        return authentication ? (<Navigate to="/login" state={{from: location}} replace />) : (<Navigate to="/" replace />)
+        return authentication ? (<Navigate to="/login" state={{from: location}} replace />) : (<Navigate to={from} replace />)
     }
 
     return <Outlet />;

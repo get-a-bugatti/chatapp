@@ -4,6 +4,8 @@ import { socket } from "../utils/socket.js";
 import { useSelector } from "react-redux";
 
 export default function GlobalChat() {
+
+  console.log("GlobalChat rendered ::...");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
